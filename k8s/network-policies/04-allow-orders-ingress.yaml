@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-orders-ingress
+  namespace: retail-app
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: orders
+  policyTypes:
+    - Ingress
+  ingress:
+    # Deliberately does NOT include catalog — catalog has no reason to
+    # call orders, and shouldn't be able to.
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ui
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: checkout
+      ports:
+        - protocol: TCP
+          port: 8080

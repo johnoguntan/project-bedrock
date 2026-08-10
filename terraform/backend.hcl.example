@@ -1,0 +1,9 @@
+# Copy this file to backend.hcl (gitignored) and fill in the bucket name
+# you created via terraform/bootstrap/, then run:
+#   terraform init -backend-config=backend.hcl
+#
+# In CI (GitHub Actions), this same value is passed via
+# -backend-config="bucket=..." using a repository variable — see
+# .github/workflows/terraform.yml
+
+bucket = "bedrock-tfstate-REPLACE-ME"

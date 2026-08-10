@@ -1,0 +1,40 @@
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Backend config — contains bucket name; template stays, real file doesn't
+backend.hcl
+!backend.hcl.example
+
+# AWS credentials — should never be here, but as a hard safety net
+.aws/
+*.pem
+credentials
+credentials.csv
+
+# Kubeconfig — may contain cluster auth tokens
+kubeconfig
+*.kubeconfig
+
+# OS / editor noise
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Lambda build artifacts
+lambda/**/node_modules/
+lambda/**/__pycache__/
+lambda/**/*.zip

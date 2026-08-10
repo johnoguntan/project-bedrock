@@ -1,0 +1,12 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-ingress
+  namespace: retail-app
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  # No ingress rules = deny by default. Egress intentionally left
+  # unrestricted (see README) so RDS/DynamoDB/Secrets Manager/DNS calls
+  # keep working without a separate allow-list per service.

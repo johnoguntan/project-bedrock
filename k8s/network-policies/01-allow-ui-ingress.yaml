@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ui-ingress
+  namespace: retail-app
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ui
+  policyTypes:
+    - Ingress
+  ingress:
+    # ui is the internet-facing entrypoint — traffic arrives from the ALB
+    # directly to pod IPs (target-type: ip), not from another pod, so this
+    # has to be an ipBlock rather than a podSelector.
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 8080

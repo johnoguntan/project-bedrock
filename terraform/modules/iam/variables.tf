@@ -1,0 +1,9 @@
+variable "dev_iam_user_name" { type = string }
+variable "app_namespace" { type = string }
+variable "assets_bucket_name" { type = string }
+variable "cluster_name" { type = string }
+variable "oidc_provider_arn" { type = string }
+variable "carts_dynamodb_arn" { type = string }
+variable "catalog_secret_name" { type = string }
+variable "orders_secret_name" { type = string }
+variable "aws_region" { type = string }
