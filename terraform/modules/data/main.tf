@@ -92,7 +92,7 @@ resource "aws_secretsmanager_secret" "orders_db" {
 resource "aws_secretsmanager_secret_version" "orders_db" {
   secret_id = aws_secretsmanager_secret.orders_db.id
   secret_string = jsonencode({
-    username = "admin"
+    username = "dbadmin"
     password = random_password.orders_db.result
   })
 }
@@ -104,7 +104,7 @@ resource "aws_db_instance" "orders" {
   instance_class          = var.db_instance_class
   allocated_storage       = 20
   db_name                 = "orders"
-  username                = "admin"
+  username                = "dbadmin"
   password                = random_password.orders_db.result
   db_subnet_group_name    = aws_db_subnet_group.db.name
   vpc_security_group_ids  = [aws_security_group.db.id]

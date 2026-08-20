@@ -141,104 +141,14 @@ resource "kubernetes_manifest" "orders_secret" {
 }
 
 # -----------------------------------------------------------------------------
-# Retail Store Sample App (Helm Chart)
+# Retail Store Sample App
 # -----------------------------------------------------------------------------
-resource "helm_release" "retail_app" {
-  name       = "retail-store"
-  repository = "https://aws-containers.github.io/retail-store-sample-app/"
-  chart      = "retail-store-sample-app"
-  namespace  = kubernetes_namespace.app.metadata[0].name
-  version    = "0.8.1" # Or latest
-
-  depends_on = [
-    kubernetes_manifest.catalog_secret,
-    kubernetes_manifest.orders_secret
-  ]
-
-  # Configuration for Catalog (MySQL)
-  set {
-    name  = "catalog.db.type"
-    value = "mysql"
-  }
-  set {
-    name  = "catalog.db.endpoint"
-    value = var.catalog_db_endpoint
-  }
-  set {
-    name  = "catalog.db.name"
-    value = "catalog"
-  }
-  set {
-    name  = "catalog.db.secretName"
-    value = "catalog-db-secret"
-  }
-
-  # Configuration for Orders (PostgreSQL)
-  set {
-    name  = "orders.db.type"
-    value = "postgres"
-  }
-  set {
-    name  = "orders.db.endpoint"
-    value = var.orders_db_endpoint
-  }
-  set {
-    name  = "orders.db.name"
-    value = "orders"
-  }
-  set {
-    name  = "orders.db.secretName"
-    value = "orders-db-secret"
-  }
-
-  # Configuration for Carts (DynamoDB)
-  set {
-    name  = "carts.db.type"
-    value = "dynamodb"
-  }
-  set {
-    name  = "carts.db.dynamoTableName"
-    value = var.carts_dynamodb_table
-  }
-  set {
-    name  = "carts.serviceAccount.name"
-    value = "carts"
-  }
-  set {
-    name  = "carts.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    value = var.carts_irsa_role_arn
-  }
-
-  # Configuration for UI Ingress
-  set {
-    name  = "ui.ingress.enabled"
-    value = "true"
-  }
-  set {
-    name  = "ui.ingress.annotations.kubernetes\\.io/ingress\\.class"
-    value = "alb"
-  }
-  set {
-    name  = "ui.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/scheme"
-    value = "internet-facing"
-  }
-  set {
-    name  = "ui.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/target-type"
-    value = "ip"
-  }
-
-  # TLS termination at the ALB (Bonus 5.2). See tls.tf for the cert.
-  set {
-    name  = "ui.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/certificate-arn"
-    value = aws_acm_certificate.ui.arn
-  }
-  set {
-    name  = "ui.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/listen-ports"
-    value = "[{\"HTTP\":80},{\"HTTPS\":443}]"
-    type  = "string"
-  }
-  set {
-    name  = "ui.ingress.annotations.alb\\.ingress\\.kubernetes\\.io/ssl-redirect"
-    value = "443"
-  }
-}
+# The upstream project retired the single combined Helm chart this
+# terraform originally targeted (aws-containers.github.io/retail-store-sample-app
+# now 404s) in favor of five separate per-service OCI charts with a very
+# different values schema. Under exam time pressure we're deploying the app
+# via plain Kubernetes manifests instead (explicitly allowed by the exam
+# brief section 4.2 as an alternative to Helm — Helm is bonus 5.1 only).
+# See k8s/app/ for the manifests and README.md for how they're applied.
+# The namespaces, ESO, and ExternalSecrets above are still used by the
+# plain-manifest deployment — only this chart-based resource is removed.
