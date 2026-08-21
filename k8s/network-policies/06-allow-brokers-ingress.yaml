@@ -6,7 +6,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: rabbitmq
+      app.kubernetes.io/name: orders
+      app.kubernetes.io/component: rabbitmq
   policyTypes:
     - Ingress
   ingress:
@@ -29,7 +30,8 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: redis
+      app.kubernetes.io/name: checkout
+      app.kubernetes.io/component: redis
   policyTypes:
     - Ingress
   ingress:

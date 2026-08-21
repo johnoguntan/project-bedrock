@@ -124,4 +124,20 @@ resource "aws_dynamodb_table" "carts" {
     name = "id"
     type = "S"
   }
+
+  # The carts service queries carts by customer via this GSI — confirmed
+  # from the app's own runtime error ("The table does not have the
+  # specified index: idx_global_customerId") once persistence config was
+  # otherwise correct. Without it, add-to-cart / view-cart lookups fail
+  # even though basic PutItem/GetItem by id would work.
+  attribute {
+    name = "customerId"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "idx_global_customerId"
+    hash_key        = "customerId"
+    projection_type = "ALL"
+  }
 }

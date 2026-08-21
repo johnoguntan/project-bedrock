@@ -140,8 +140,15 @@ resource "aws_iam_policy" "carts" {
           "dynamodb:DeleteItem",
           "dynamodb:BatchWriteItem"
         ]
-        Effect   = "Allow"
-        Resource = var.carts_dynamodb_arn
+        Effect = "Allow"
+        # The carts service queries via a GSI (idx_global_customerId), which
+        # is a distinct resource from the table itself in DynamoDB's IAM
+        # model — granting access to the table ARN alone doesn't cover
+        # Query calls against its indexes.
+        Resource = [
+          var.carts_dynamodb_arn,
+          "${var.carts_dynamodb_arn}/index/*"
+        ]
       },
     ]
   })

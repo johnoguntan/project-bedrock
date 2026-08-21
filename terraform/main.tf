@@ -92,6 +92,7 @@ module "app" {
   orders_db_endpoint   = module.data.orders_db_endpoint
   carts_dynamodb_table = module.data.carts_dynamodb_table
   carts_irsa_role_arn  = module.iam.carts_irsa_role_arn
+  eso_irsa_role_arn    = module.iam.eso_irsa_role_arn
 
   # The Ingress created here is useless until the controller that
   # reconciles it exists.
