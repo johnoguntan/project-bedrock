@@ -46,7 +46,7 @@ resource "helm_release" "external_secrets" {
 # -----------------------------------------------------------------------------
 resource "kubernetes_manifest" "cluster_secret_store" {
   depends_on = [helm_release.external_secrets]
-  
+
   manifest = {
     apiVersion = "external-secrets.io/v1beta1"
     kind       = "ClusterSecretStore"
@@ -372,8 +372,8 @@ resource "kubernetes_config_map" "carts" {
     namespace = kubernetes_namespace.app.metadata[0].name
   }
   data = {
-    RETAIL_CART_PERSISTENCE_PROVIDER             = "dynamodb"
-    RETAIL_CART_PERSISTENCE_DYNAMODB_TABLE_NAME  = var.carts_dynamodb_table
+    RETAIL_CART_PERSISTENCE_PROVIDER              = "dynamodb"
+    RETAIL_CART_PERSISTENCE_DYNAMODB_TABLE_NAME   = var.carts_dynamodb_table
     RETAIL_CART_PERSISTENCE_DYNAMODB_CREATE_TABLE = "false"
   }
 }
@@ -539,12 +539,12 @@ resource "kubernetes_ingress_v1" "ui" {
     name      = "ui"
     namespace = kubernetes_namespace.app.metadata[0].name
     annotations = {
-      "kubernetes.io/ingress.class"                = "alb"
-      "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
-      "alb.ingress.kubernetes.io/target-type"      = "ip"
-      "alb.ingress.kubernetes.io/certificate-arn"  = aws_acm_certificate.ui.arn
-      "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTPS\":443}]"
-      "alb.ingress.kubernetes.io/ssl-redirect"     = "443"
+      "kubernetes.io/ingress.class"               = "alb"
+      "alb.ingress.kubernetes.io/scheme"          = "internet-facing"
+      "alb.ingress.kubernetes.io/target-type"     = "ip"
+      "alb.ingress.kubernetes.io/certificate-arn" = aws_acm_certificate.ui.arn
+      "alb.ingress.kubernetes.io/listen-ports"    = "[{\"HTTPS\":443}]"
+      "alb.ingress.kubernetes.io/ssl-redirect"    = "443"
     }
   }
   spec {

@@ -107,8 +107,17 @@ resource "aws_iam_policy" "github_actions_scoped" {
 module "iam_github_oidc_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-github-oidc-role"
   version = "~> 5.30"
-  name     = "bedrock-github-actions-role"
-  subjects = ["johnoguntan/project-bedrock:*"]
+  name    = "bedrock-github-actions-role"
+
+  # GitHub now embeds immutable owner/repo numeric IDs into the OIDC sub
+  # claim (confirmed via a debug step that printed the actual token:
+  # "repo:johnoguntan@246523484/project-bedrock@1329015419:ref:refs/heads/main")
+  # instead of the plain "repo:johnoguntan/project-bedrock:*" this was
+  # originally written against. That's why every CI run since day one
+  # failed at AssumeRoleWithWebIdentity — the StringLike condition never
+  # matched the real subject string. IDs are stable across renames, so
+  # this is also more correct than name-matching, not just a workaround.
+  subjects = ["johnoguntan@246523484/project-bedrock@1329015419:*"]
 
   policies = {
     scoped = aws_iam_policy.github_actions_scoped.arn
